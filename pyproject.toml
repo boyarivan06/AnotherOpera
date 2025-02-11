@@ -1,0 +1,33 @@
+[tool.poetry]
+name = "another opera"
+version = "0.1.0"
+description = ""
+authors = ["Ivan Boyarintsev <boyarivan06@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.13"
+python-dotenv = "^1.0.1"
+prompt = "^0.4.1"
+
+
+[tool.poetry.group.dev.dependencies]
+ruff = "^0.9.6"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.ruff]
+# Максимальная длина строки
+line-length = 88
+
+# Выбор категорий ошибок
+select = ["E", "F", "W"]
+
+# Игнорируемые ошибки.poe
+# Используйте № noqa: <код ошибки> для исключения конкретных строк.
+ignore = ["W503"]
+
+# Исключенные директории
+exclude = [".git", "__pycache__", "venv", ".venv"]
