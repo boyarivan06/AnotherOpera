@@ -23,11 +23,11 @@ build-backend = "poetry.core.masonry.api"
 line-length = 88
 
 # Выбор категорий ошибок
-select = ["E", "F", "W"]
+lint.select = ["E", "F", "W"]
 
 # Игнорируемые ошибки.poe
-# Используйте № noqa: <код ошибки> для исключения конкретных строк.
-ignore = ["W503"]
+# Используйте # noqa: <код ошибки> для исключения конкретных строк.
+lint.ignore = []
 
 # Исключенные директории
 exclude = [".git", "__pycache__", "venv", ".venv"]

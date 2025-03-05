@@ -27,7 +27,8 @@ def main():
         elif cmd == 2:
             name = prompt.string("Введите название песни: ")
             while name not in data:
-                name = prompt.string("Такой записи нет, попробуйте ещё или введите 0, чтобы выйти в меню: ")
+                name = prompt.string("Такой записи нет, попробуйте ещё или "
+                                     "введите 0, чтобы выйти в меню: ")
                 if name == '0':
                     up = True
                     break
@@ -35,7 +36,8 @@ def main():
                 continue
             par = prompt.string("Введите параметр для замены (name, artist, record): ")
             while par not in ['name', 'artist', 'record']:
-                par = prompt.string("Ошибка, введите параметр для замены (name, artist, record), 0 для выхода в меню: ")
+                par = prompt.string("Ошибка, введите параметр для замены "
+                                    "(name, artist, record), 0 для выхода в меню: ")
                 if name == '0':
                     up = True
                     break
@@ -46,7 +48,8 @@ def main():
         elif cmd == 3:
             name = prompt.string("Введите название песни: ")
             while name not in data:
-                name = prompt.string("Такой записи нет, попробуйте ещё или введите 0, чтобы выйти в меню: ")
+                name = prompt.string("Такой записи нет, попробуйте "
+                                     "ещё или введите 0, чтобы выйти в меню: ")
                 if name == '0':
                     up = True
                     break
@@ -57,7 +60,8 @@ def main():
                 del data[name]
                 print('Успешно')
         elif cmd == 4:
-            print(*[f'{data[k].name} by {data[k].artist} from record {data[k].record}' for k in data], sep='\n')
+            print(*[f'{data[k].name} by {data[k].artist} from record {data[k].record}'
+                    for k in data], sep='\n')
         else:
             print("До встречи")
             return 0
