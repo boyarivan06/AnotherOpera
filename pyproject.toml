@@ -4,11 +4,17 @@ version = "0.1.0"
 description = ""
 authors = ["Ivan Boyarintsev <boyarivan06@gmail.com>"]
 readme = "README.md"
+repository = "https://gitlab.digital.mephi.ru/boyarivan06/another-opera.git"
 
 [tool.poetry.dependencies]
 python = "^3.13"
 python-dotenv = "^1.0.1"
 prompt = "^0.4.1"
+pyqt5 = "^5.15.11"
+sqlalchemy = "^2.0.38"
+audioread = "^3.0.1"
+standard-aifc = "^3.13.0"
+standard-sunau = "^3.13.0"
 
 
 [tool.poetry.group.dev.dependencies]
@@ -31,3 +37,7 @@ lint.ignore = []
 
 # Исключенные директории
 exclude = [".git", "__pycache__", "venv", ".venv"]
+
+[tool.poetry.scripts]
+project = "main2"
+database = "db"

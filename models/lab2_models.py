@@ -1,7 +1,29 @@
 import gc
+import json
 from datetime import datetime
+from json import JSONEncoder
 
 from custom_exc import DurationException
+
+
+class SingleTon:
+    __instance = None
+    def __new__(cls, *args, **kwargs):
+        if cls.__instance is None:
+            cls.__instance = super().__new__(cls)
+            return cls.__instance
+
+
+class SongDataBase(SingleTon):
+    data: list
+    def append(self, song: 'BaseSong'):
+        self.data.append(song)
+
+    def __getitem__(self, index):
+        return self.data[index]
+
+    def __get__(self, instance, owner):
+        return instance.data
 
 
 class Descriptor:
@@ -16,7 +38,7 @@ class Descriptor:
 
 
 class BaseSong:
-    __created: datetime
+    __created: str
     name: Descriptor()
     duration: Descriptor()
     artist: Descriptor()
@@ -30,7 +52,7 @@ class BaseSong:
         self.duration = duration
         self.music_author = music_author
         self.genre = genre
-        self.__created = datetime.now()
+        self.__created = datetime.now().strftime('%d.%m.%Y %H:%M:%S.%f')
 
     @property
     def created(self):
@@ -42,12 +64,14 @@ music by {self.music_author}
 duration: {self.duration}
 genre: {self.genre}"""
 
-
     @classmethod
     def get_all(cls):
-        for ob in gc.get_objects():
-            if isinstance(ob, BaseSong):
-                print(f'"{ob.name}" ({ob.__class__.__name__})')
+        return [f'"{ob.name}" ({ob.__class__.__name__})' for ob in gc.get_objects() if isinstance(ob, BaseSong)]
+
+
+class SongEncoder(JSONEncoder):
+    def default(self, o):
+        return o.__dict__
 
 class VocalSong(BaseSong):
     text = Descriptor()
