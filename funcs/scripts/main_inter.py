@@ -1,6 +1,6 @@
 import sys
 from PyQt5 import QtWidgets
-from interface import App
+from funcs.interface import App
 
 
 def main():

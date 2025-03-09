@@ -16,10 +16,10 @@
   <widget class="QWidget" name="formLayoutWidget">
    <property name="geometry">
     <rect>
-     <x>50</x>
+     <x>40</x>
      <y>20</y>
-     <width>311</width>
-     <height>221</height>
+     <width>341</width>
+     <height>230</height>
     </rect>
    </property>
    <layout class="QFormLayout" name="formLayout">
@@ -40,14 +40,14 @@
       </property>
      </widget>
     </item>
-    <item row="1" column="0">
+    <item row="2" column="0">
      <widget class="QLabel" name="label_3">
       <property name="text">
        <string>Артист:</string>
       </property>
      </widget>
     </item>
-    <item row="1" column="1">
+    <item row="2" column="1">
      <widget class="QLabel" name="artist_label">
       <property name="autoFillBackground">
        <bool>false</bool>
@@ -57,14 +57,14 @@
       </property>
      </widget>
     </item>
-    <item row="2" column="0">
+    <item row="4" column="0">
      <widget class="QLabel" name="label_2">
       <property name="text">
        <string>Альбом</string>
       </property>
      </widget>
     </item>
-    <item row="2" column="1">
+    <item row="4" column="1">
      <widget class="QLabel" name="record_label">
       <property name="autoFillBackground">
        <bool>false</bool>
@@ -74,14 +74,14 @@
       </property>
      </widget>
     </item>
-    <item row="3" column="0">
+    <item row="5" column="0">
      <widget class="QLabel" name="label_4">
       <property name="text">
        <string>Длительность</string>
       </property>
      </widget>
     </item>
-    <item row="3" column="1">
+    <item row="5" column="1">
      <widget class="QLabel" name="duration_label">
       <property name="autoFillBackground">
        <bool>false</bool>
@@ -91,7 +91,14 @@
       </property>
      </widget>
     </item>
-    <item row="5" column="0" colspan="2">
+    <item row="6" column="1">
+     <widget class="QPushButton" name="play_stop_button">
+      <property name="text">
+       <string>PLAY</string>
+      </property>
+     </widget>
+    </item>
+    <item row="7" column="0" colspan="2">
      <widget class="QSlider" name="song_slider">
       <property name="orientation">
        <enum>Qt::Horizontal</enum>
@@ -101,10 +108,13 @@
       </property>
      </widget>
     </item>
-    <item row="4" column="1">
-     <widget class="QPushButton" name="play_stop_button">
+    <item row="6" column="0">
+     <widget class="QPushButton" name="del_button">
+      <property name="styleSheet">
+       <string notr="true">color: rgb(255, 0, 0)</string>
+      </property>
       <property name="text">
-       <string>PLAY</string>
+       <string>Удалить песню</string>
       </property>
      </widget>
     </item>

@@ -4,6 +4,9 @@ version = "0.1.0"
 description = ""
 authors = ["Ivan Boyarintsev <boyarivan06@gmail.com>"]
 readme = "README.md"
+packages = [
+    {include = "funcs"},
+]
 repository = "https://gitlab.digital.mephi.ru/boyarivan06/another-opera.git"
 
 [tool.poetry.dependencies]
@@ -39,5 +42,5 @@ lint.ignore = []
 exclude = [".git", "__pycache__", "venv", ".venv"]
 
 [tool.poetry.scripts]
-project = "main2"
-database = "db"
+project = "funcs.scripts.main_inter:main"
+database = "funcs.scripts.db:build"
