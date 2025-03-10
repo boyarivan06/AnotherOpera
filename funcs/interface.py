@@ -4,6 +4,8 @@ import shutil
 import audioread
 from PyQt5.QtWidgets import QMainWindow, QDialog, QFileDialog
 from PyQt5 import uic, QtMultimedia, QtCore
+
+from api import get_songs
 from funcs.scripts.db import session
 from models.sqlalch_models import Song
 from config import MEDIA_ROOT
@@ -34,9 +36,8 @@ class NewSongForm(QDialog):
             self.warning_label.setText('файл не выбран!')
             return
         dur = .0
-        name = '--song-name--'
         with audioread.audio_open(self.filename) as ex:
-            dur = int(ex.duration * 1000)
+            dur = int(ex.duration * 1000)  # in microseconds
         name = self.name_input.text() if self.name_input.text() else self.filename.split('/')[-1].split('.')[0]
         s = Song(name=name, duration=dur,
                      artist=self.artist_input.text(),
@@ -124,9 +125,9 @@ class App(QMainWindow):
     def __init__(self):
         super().__init__()
         uic.loadUi('QT_windows/main.ui', self)
-        self.add_song_button.clicked.connect(self.create_song_dialog)
+        # self.add_song_button.clicked.connect(self.create_song_dialog)
         self.refresh_list()
-        self.songs_list.itemClicked.connect(self.show_song)
+        # self.songs_list.itemClicked.connect(self.show_song)
 
     def create_song_dialog(self):
         dialog = NewSongForm(self)
@@ -157,4 +158,5 @@ class App(QMainWindow):
 
     def refresh_list(self):
         self.songs_list.clear()
-        self.songs_list.addItems([e.name for e in session.query(Song).all()])
+        songs = get_songs()
+        self.songs_list.addItems([e['name'] for e in songs])
