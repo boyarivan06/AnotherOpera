@@ -1,3 +1,5 @@
+from typing import Any
+
 from sqlalchemy import Column, Text, Float, Integer, String
 from sqlalchemy.orm import DeclarativeBase
 
@@ -17,3 +19,13 @@ class Song(Base):
 
     def __str__(self):
         return f'{self.name} by {self.artist}'
+
+    def get_dict(self):
+        return {'name':self.name, 'artist':self.artist, 'duration':self.duration, 'record':self.record, 'file_path':self.file_path}
+
+    @classmethod
+    def load(cls, data:dict[str, Any]):
+        new_s = Song()
+        for k in data:
+            new_s.__dict__[k] = data[k]
+        return new_s

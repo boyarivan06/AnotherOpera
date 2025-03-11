@@ -5,7 +5,7 @@ import audioread
 from PyQt5.QtWidgets import QMainWindow, QDialog, QFileDialog
 from PyQt5 import uic, QtMultimedia, QtCore
 
-from api import get_songs
+import api
 from funcs.scripts.db import session
 from models.sqlalch_models import Song
 from config import MEDIA_ROOT
@@ -28,22 +28,21 @@ class NewSongForm(QDialog):
         super().__init__(parent)
         uic.loadUi('QT_windows/new_song.ui', self)
         self.buttonBox.accepted.connect(self.create_song)
-        self.file_button.clicked.connect(self.get_file)
+        # self.file_button.clicked.connect(self.get_file)
         self.filename = None
 
     def create_song(self):
-        if self.filename is None:
-            self.warning_label.setText('файл не выбран!')
-            return
+        #if self.filename is None:
+        #    self.warning_label.setText('файл не выбран!')
+        #    return
         dur = .0
-        with audioread.audio_open(self.filename) as ex:
-            dur = int(ex.duration * 1000)  # in microseconds
+        #with audioread.audio_open(self.filename) as ex:
+        #    dur = int(ex.duration * 1000)  # in microseconds
         name = self.name_input.text() if self.name_input.text() else self.filename.split('/')[-1].split('.')[0]
         s = Song(name=name, duration=dur,
                      artist=self.artist_input.text(),
                  record=self.record_input.text(), file_path=self.filename)
-        session.add(s)
-        session.commit()
+        api.new_song(s)
         self.close()
 
     def get_file(self):
@@ -72,15 +71,16 @@ class SongView(QDialog):
     playing = False
     started = False
     stop_position = 0
-    def __init__(self, parent, player, song):
+    def __init__(self, parent, player, song: Song):
         super().__init__(parent)
         uic.loadUi('QT_windows/song_view.ui', self)
-        self.play_stop_button.clicked.connect(self.play_stop)
-        self.playing = False
-        self.player = player
-        self.player.positionChanged.connect(self.position_changed)
-        self.song_slider.valueChanged.connect(self.slider_moved)
-        self.song_slider.setMaximum(song.duration)
+        if player:
+            self.play_stop_button.clicked.connect(self.play_stop)
+            self.playing = False
+            self.player = player
+            self.player.positionChanged.connect(self.position_changed)
+            self.song_slider.valueChanged.connect(self.slider_moved)
+            self.song_slider.setMaximum(song.duration)
         self.del_button.clicked.connect(self.delete_song)
         self.song = song
 
@@ -88,9 +88,8 @@ class SongView(QDialog):
         confirm_dialog = ConfirmDialog(self)
         confirm_dialog.exec()
         if confirm_dialog.acc:
-            os.remove(self.song.file_path)
-            session.delete(self.song)
-            session.commit()
+            # os.remove(self.song.file_path)
+            api.delete_song(self.song)
             self.parent().refresh_list()
             self.close()
 
@@ -125,9 +124,9 @@ class App(QMainWindow):
     def __init__(self):
         super().__init__()
         uic.loadUi('QT_windows/main.ui', self)
-        # self.add_song_button.clicked.connect(self.create_song_dialog)
+        self.add_song_button.clicked.connect(self.create_song_dialog)
         self.refresh_list()
-        # self.songs_list.itemClicked.connect(self.show_song)
+        self.songs_list.itemClicked.connect(self.show_song)
 
     def create_song_dialog(self):
         dialog = NewSongForm(self)
@@ -135,15 +134,15 @@ class App(QMainWindow):
         self.refresh_list()
 
     def show_song(self, item):
-        song = session.query(Song).filter(Song.name==item.text()).first()
+        song = api.get_song_by_args(name=item.text())
         if not song:
             print(f"AAAAAAAA `{item.text()}`")
             return
-        url = QtCore.QUrl.fromLocalFile(song.file_path)
-        content = QtMultimedia.QMediaContent(url)
-        player = QtMultimedia.QMediaPlayer()
-        player.setMedia(content)
-        dialog = SongView(self, player, song)
+        # url = QtCore.QUrl.fromLocalFile(song['file_path'])
+        # content = QtMultimedia.QMediaContent(url)
+        # player = QtMultimedia.QMediaPlayer()
+        # player.setMedia(content)
+        dialog = SongView(self, None, song)
         dialog.name_label.setText(song.name)
         dialog.artist_label.setText(song.artist)
         dialog.duration_label.setText(str(song.duration))
@@ -151,12 +150,9 @@ class App(QMainWindow):
         dialog.record_label.setText(song.record)
         dialog.setWindowTitle(song.name)
 
-        if not player:
-            print('aaa, no player!!!')
-        dialog.player = player
         dialog.exec()
 
     def refresh_list(self):
         self.songs_list.clear()
-        songs = get_songs()
+        songs = api.get_songs()
         self.songs_list.addItems([e['name'] for e in songs])
