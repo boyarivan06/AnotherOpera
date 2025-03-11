@@ -1,14 +1,11 @@
-import json
 import os
 import shutil
-from json import JSONEncoder
 
 # import audioread
 from PyQt5.QtWidgets import QMainWindow, QDialog, QFileDialog
-from PyQt5 import uic, QtMultimedia, QtCore
+from PyQt5 import uic
 
-from special import log_action, MetaControl
-# from funcs.scripts.db import session
+from special import log_action
 from models.sqlalch_models import Song
 from config import MEDIA_ROOT
 
@@ -44,7 +41,8 @@ class NewSongForm(QDialog):
         dur = .0
         #with audioread.audio_open(self.filename) as ex:
         #    dur = int(ex.duration * 1000)  # in microseconds
-        name = self.name_input.text() if self.name_input.text() else self.filename.split('/')[-1].split('.')[0]
+        name = self.name_input.text() if self.name_input.text() \
+            else self.filename.split('/')[-1].split('.')[0]
         s = Song(name=name, duration=dur,
                      artist=self.artist_input.text(),
                  record=self.record_input.text(), file_path=self.filename)
@@ -55,10 +53,13 @@ class NewSongForm(QDialog):
     def get_file(self):
         # fd = QFileDialog(self)
         # fd.exec()
-        file_path = QFileDialog.getOpenFileName(self, 'Open file', os.path.abspath('Downloads'), "Audio files (*.mp3 *.wav)")
+        file_path = QFileDialog.getOpenFileName(self, 'Open file',
+                                                os.path.abspath('Downloads'),
+                                                "Audio files (*.mp3 *.wav)")
         # print(filename)
         self.file_label.setText(file_path[0].split('/')[-1])
-        shutil.copyfile(file_path[0], os.path.join(MEDIA_ROOT, file_path[0].split('/')[-1]))
+        shutil.copyfile(file_path[0], os.path.join(MEDIA_ROOT,
+                                                   file_path[0].split('/')[-1]))
         self.filename = str(os.path.join(MEDIA_ROOT, file_path[0].split('/')[-1]))
         self.warning_label.setText('')
 

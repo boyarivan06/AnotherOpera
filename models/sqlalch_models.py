@@ -1,5 +1,3 @@
-from typing import Any
-
 from special import log_action, MetaControl
 from api import APIConnect
 
@@ -24,7 +22,8 @@ class Song(APIConnect, metaclass=MetaControl):
     slots = ['name', 'duration', 'artist', 'record', 'file_path']
 
     @log_action
-    def __init__(self, name='empty', duration=None, artist=None, record=None, file_path=None):
+    def __init__(self, name='empty', duration=None,
+                 artist=None, record=None, file_path=None):
         self.artist = artist
         self.name = name
         self.duration = duration
@@ -35,7 +34,9 @@ class Song(APIConnect, metaclass=MetaControl):
         return f'{self.name} by {self.artist}'
     @log_action
     def get_dict(self):
-        return {'name':self.name, 'artist':self.artist, 'duration':self.duration, 'record':self.record, 'file_path':self.file_path}
+        return {'name':self.name, 'artist':self.artist,
+                'duration':self.duration, 'record':self.record,
+                'file_path':self.file_path}
 
 
 class Artist(APIConnect, metaclass=MetaControl):

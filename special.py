@@ -1,18 +1,21 @@
 import functools
 import logging
 
-logging.basicConfig(filename = 'app.log', level = logging.INFO, format = '%(asctime)s -  %(levelname)s - %(message)s')
+logging.basicConfig(filename = 'app.log', level = logging.INFO,
+                    format = '%(asctime)s -  %(levelname)s - %(message)s')
 
 def log_action(func):
     @functools.wraps(func)
     def wrapper(*args, **kwargs):
-        logging.info(f"Вызов функции: {str(func).split()[1]} с аргументами: {args}, {kwargs}")
+        logging.info(f"Вызов функции: {str(func).split()[1]} "
+                     f"с аргументами: {args}, {kwargs}")
         try:
             result = func(*args, **kwargs)
             logging.info(f"Функция {str(func).split()[1]}  выполнена успешно")
             return result
         except Exception as e:
-            logging.error(f"Ошибка в функции {str(func).split()[1]}: {str(e)}", exc_info = True)
+            logging.error(f"Ошибка в функции {str(func).split()[1]}: "
+                          f"{str(e)}", exc_info = True)
             raise
     return wrapper
 
