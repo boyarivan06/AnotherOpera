@@ -1,29 +1,35 @@
 import os
 import shutil
 
-import audioread
+# import audioread
 from PyQt5.QtWidgets import QMainWindow, QDialog, QFileDialog
 from PyQt5 import uic, QtMultimedia, QtCore
 
 import api
-from funcs.scripts.db import session
+from special import log_action, MetaControl
+# from funcs.scripts.db import session
 from models.sqlalch_models import Song
 from config import MEDIA_ROOT
 
 
 class ConfirmDialog(QDialog):
+    __metaclass__ = MetaControl
+    @log_action
     def __init__(self, parent):
         super().__init__(parent)
         uic.loadUi('QT_windows/confirm.ui', self)
         self.buttonBox.accepted.connect(self.accepted)
         self.acc = False
 
+    @log_action
     def accepted(self):
         self.acc = True
 
 
 class NewSongForm(QDialog):
+    __metaclass__ = MetaControl
     filename: str|None
+    @log_action
     def __init__(self, parent):
         super().__init__(parent)
         uic.loadUi('QT_windows/new_song.ui', self)
@@ -31,6 +37,7 @@ class NewSongForm(QDialog):
         # self.file_button.clicked.connect(self.get_file)
         self.filename = None
 
+    @log_action
     def create_song(self):
         #if self.filename is None:
         #    self.warning_label.setText('файл не выбран!')
@@ -45,6 +52,7 @@ class NewSongForm(QDialog):
         api.new_song(s)
         self.close()
 
+    @log_action
     def get_file(self):
         # fd = QFileDialog(self)
         # fd.exec()
@@ -56,11 +64,13 @@ class NewSongForm(QDialog):
         self.warning_label.setText('')
 
 class SelectSongDialog(QDialog):
+    @log_action
     def __init__(self, parent):
         super().__init__(parent)
         uic.loadUi('QT_windows/select_song.ui', self)
         self.buttonBox.accepted.connect(self.selected)
 
+    @log_action
     def selected(self):
         form = NewSongForm(self)
         form.exec()
@@ -71,6 +81,9 @@ class SongView(QDialog):
     playing = False
     started = False
     stop_position = 0
+    __metaclass__ = MetaControl
+
+    @log_action
     def __init__(self, parent, player, song: Song):
         super().__init__(parent)
         uic.loadUi('QT_windows/song_view.ui', self)
@@ -84,6 +97,7 @@ class SongView(QDialog):
         self.del_button.clicked.connect(self.delete_song)
         self.song = song
 
+
     def delete_song(self):
         confirm_dialog = ConfirmDialog(self)
         confirm_dialog.exec()
@@ -92,6 +106,7 @@ class SongView(QDialog):
             api.delete_song(self.song)
             self.parent().refresh_list()
             self.close()
+
 
     def play_stop(self):
         if not self.playing:
@@ -109,6 +124,7 @@ class SongView(QDialog):
             self.player.stop()
             self.play_stop_button.setText('PLAY')
 
+    @log_action
     def slider_moved(self, value):
         """
         slider moves from 0 to 100 !!!
@@ -116,11 +132,14 @@ class SongView(QDialog):
         """
         self.player.setPosition(value)
 
+    @log_action
     def position_changed(self, position):
         if self.playing:
             self.song_slider.setSliderPosition(position)
 
 class App(QMainWindow):
+    __metaclass__ = MetaControl
+    @log_action
     def __init__(self):
         super().__init__()
         uic.loadUi('QT_windows/main.ui', self)
@@ -133,6 +152,7 @@ class App(QMainWindow):
         dialog.exec()
         self.refresh_list()
 
+    @log_action
     def show_song(self, item):
         song = api.get_song_by_args(name=item.text())
         if not song:
@@ -152,6 +172,7 @@ class App(QMainWindow):
 
         dialog.exec()
 
+    @log_action
     def refresh_list(self):
         self.songs_list.clear()
         songs = api.get_songs()

@@ -19,10 +19,8 @@ def get_song_by_args(**kwargs) -> Song:
 
 def new_song(song: Song) -> int:
     resp = post(API_ROOT+'/song', data=song.get_dict())
-    print(resp.text, resp.status_code)
     return resp.status_code
 
 def delete_song(song: Song) -> int:
     resp = delete(API_ROOT+'/song', data=song.get_dict())
-    print(resp.text, resp.status_code)
     return resp.status_code
