@@ -1,10 +1,10 @@
 from typing import Any
 
 from special import log_action, MetaControl
+from api import APIConnect
 
 
-class Descriptor:
-    __metaclass__ = MetaControl
+class Descriptor(metaclass=MetaControl):
     def __set_name__(self, owner, name):
         self.name = "_" + name
 
@@ -15,16 +15,16 @@ class Descriptor:
         setattr(instance, self.name, value)
 
 
-class Song:
-    __metaclass__ = MetaControl
+class Song(APIConnect, metaclass=MetaControl):
     name: Descriptor()
     duration: Descriptor()
     artist: Descriptor()
     record: Descriptor()
     file_path: Descriptor()
     slots = ['name', 'duration', 'artist', 'record', 'file_path']
+
     @log_action
-    def __init__(self, name, duration, artist, record, file_path):
+    def __init__(self, name='empty', duration=None, artist=None, record=None, file_path=None):
         self.artist = artist
         self.name = name
         self.duration = duration
@@ -37,9 +37,27 @@ class Song:
     def get_dict(self):
         return {'name':self.name, 'artist':self.artist, 'duration':self.duration, 'record':self.record, 'file_path':self.file_path}
 
-    @classmethod
-    def load(cls, data:dict[str, Any]):
-        new_s = Song(None, None, None, None, None)
-        for k in data:
-            new_s.__dict__[k] = data[k]
-        return new_s
+
+class Artist(APIConnect, metaclass=MetaControl):
+    name = Descriptor()
+    type = Descriptor()
+    image_path = Descriptor()
+
+    @log_action
+    def __init__(self, name='empty', type=None, image_path=None):
+        self.type = type
+        self.name = name
+        self.image_path = image_path
+
+
+class Record(APIConnect, metaclass=MetaControl):
+    name = Descriptor()
+    artist = Descriptor()
+    type = Descriptor()
+    genre = Descriptor()
+    @log_action
+    def __init__(self, name='empty', artist=None, type=None, genre=None):
+        self.name = name
+        self.artist = artist
+        self.type = type
+        self.genre = genre

@@ -18,9 +18,12 @@ def log_action(func):
 
 
 class MetaControl(type):
-    def __new__(cls, *args, **kwargs):
-        with open('classes.txt', 'ra') as file:
-            classes = file.readlines()
-            if cls.__name__ not in classes:
-                file.write(cls.__name__+'\n')
-        return type.__new__(cls, *args, **kwargs)
+    def __new__(cls, name, bases, namespace, **kwargs):
+        with open('classes.txt', 'a+') as file:
+            file.seek(0)  # Rewind to read existing content
+            existing_classes = [line.strip() for line in file.readlines()]
+
+            if name not in existing_classes:
+                file.write(f"{name}\n")  # Write new line if class not exists
+
+        return super().__new__(cls, name, bases, namespace, **kwargs)

@@ -1,26 +1,40 @@
 import json
+from typing import Any
 
 from requests import get, post, delete
-from models.sqlalch_models import Song
 from config import API_ROOT
+from special import MetaControl, log_action
 
 
-def get_songs():
-    res = get(API_ROOT).text
-    return json.loads(res)
+class APIConnect(metaclass=MetaControl):  # Strategy pattern + mixin
+    @classmethod
+    @log_action
+    def get_all(cls):
+        res = get(API_ROOT + f'/{cls.__name__.lower()}').text
+        return json.loads(res)
 
+    @classmethod
+    @log_action
+    def get_object_by_args(cls, **kwargs):
+        # request_json = json.dumps(kwargs)
+        resp = get(API_ROOT + f'/{cls.__name__.lower()}/one', kwargs)
+        data = json.loads(resp.text)
+        return cls.load(data)
 
-def get_song_by_args(**kwargs) -> Song:
-    # request_json = json.dumps(kwargs)
-    resp = get(API_ROOT+'/song', kwargs)
-    data = json.loads(resp.text)
-    return Song.load(data)
+    @log_action
+    def new_object(self) -> int:
+        resp = post(API_ROOT + f'/{self.__class__.__name__.lower()}/one', data=self.__dict__)
+        return resp.status_code
 
+    @log_action
+    def delete_object(self) -> int:
+        resp = delete(API_ROOT + f'/{self.__class__.__name__.lower()}/one', data=self.__dict__)
+        return resp.status_code
 
-def new_song(song: Song) -> int:
-    resp = post(API_ROOT+'/song', data=song.get_dict())
-    return resp.status_code
-
-def delete_song(song: Song) -> int:
-    resp = delete(API_ROOT+'/song', data=song.get_dict())
-    return resp.status_code
+    @classmethod
+    def load(cls, data: dict[str, Any]):
+        new_s = cls.__new__(cls)
+        new_s.__init__()
+        for k in data:
+            new_s.__dict__[k] = data[k]
+        return new_s

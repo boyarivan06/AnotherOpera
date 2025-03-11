@@ -1,11 +1,12 @@
+import json
 import os
 import shutil
+from json import JSONEncoder
 
 # import audioread
 from PyQt5.QtWidgets import QMainWindow, QDialog, QFileDialog
 from PyQt5 import uic, QtMultimedia, QtCore
 
-import api
 from special import log_action, MetaControl
 # from funcs.scripts.db import session
 from models.sqlalch_models import Song
@@ -13,7 +14,6 @@ from config import MEDIA_ROOT
 
 
 class ConfirmDialog(QDialog):
-    __metaclass__ = MetaControl
     @log_action
     def __init__(self, parent):
         super().__init__(parent)
@@ -27,7 +27,6 @@ class ConfirmDialog(QDialog):
 
 
 class NewSongForm(QDialog):
-    __metaclass__ = MetaControl
     filename: str|None
     @log_action
     def __init__(self, parent):
@@ -49,7 +48,7 @@ class NewSongForm(QDialog):
         s = Song(name=name, duration=dur,
                      artist=self.artist_input.text(),
                  record=self.record_input.text(), file_path=self.filename)
-        api.new_song(s)
+        s.new_object()
         self.close()
 
     @log_action
@@ -81,7 +80,6 @@ class SongView(QDialog):
     playing = False
     started = False
     stop_position = 0
-    __metaclass__ = MetaControl
 
     @log_action
     def __init__(self, parent, player, song: Song):
@@ -97,13 +95,12 @@ class SongView(QDialog):
         self.del_button.clicked.connect(self.delete_song)
         self.song = song
 
-
     def delete_song(self):
         confirm_dialog = ConfirmDialog(self)
         confirm_dialog.exec()
         if confirm_dialog.acc:
             # os.remove(self.song.file_path)
-            api.delete_song(self.song)
+            self.song.delete_object()
             self.parent().refresh_list()
             self.close()
 
@@ -138,7 +135,6 @@ class SongView(QDialog):
             self.song_slider.setSliderPosition(position)
 
 class App(QMainWindow):
-    __metaclass__ = MetaControl
     @log_action
     def __init__(self):
         super().__init__()
@@ -154,7 +150,7 @@ class App(QMainWindow):
 
     @log_action
     def show_song(self, item):
-        song = api.get_song_by_args(name=item.text())
+        song = Song.get_object_by_args(name=item.text())
         if not song:
             print(f"AAAAAAAA `{item.text()}`")
             return
@@ -175,5 +171,5 @@ class App(QMainWindow):
     @log_action
     def refresh_list(self):
         self.songs_list.clear()
-        songs = api.get_songs()
+        songs = Song.get_all()
         self.songs_list.addItems([e['name'] for e in songs])
