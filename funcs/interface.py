@@ -123,16 +123,13 @@ class SongView(QDialog):
             self.player.stop()
             self.play_stop_button.setText('PLAY')
 
-    @log_action
-    def slider_moved(self, value):
-        self.player.setPosition(value)
 
-    @log_action
-    def position_changed(self, position):
-        if self.playing:
-            self.song_slider.setSliderPosition(position)
 
 class App(QMainWindow):
+    player = None
+    playing = False
+    started = False
+    stop_position = 0
     current_artist = None
     current_album = None
     @log_action
@@ -147,6 +144,23 @@ class App(QMainWindow):
         self.artist_search.textEdited.connect(self.search_artist)
         self.album_search.textEdited.connect(self.search_album)
         self.song_search.textEdited.connect(self.search_song)
+
+
+    def init_player(self, song):
+        url = QtCore.QUrl(song.audio)
+        content = QtMultimedia.QMediaContent(url)
+        player = QtMultimedia.QMediaPlayer()
+        player.setMedia(content)
+        self.player = player
+
+    @log_action
+    def slider_moved(self, value):
+        self.player.setPosition(value)
+
+    @log_action
+    def position_changed(self, position):
+        if self.playing:
+            self.song_slider.setSliderPosition(position)
 
 
     @log_action
@@ -190,22 +204,29 @@ class App(QMainWindow):
     @log_action
     def show_song(self, item):
         song = Track.get_object_by_name(name=item.text())
-        if not song:
-            print(f"AAAAAAAA `{item.text()}`")
-            return
-        url = QtCore.QUrl(song.audio)
-        content = QtMultimedia.QMediaContent(url)
-        player = QtMultimedia.QMediaPlayer()
-        player.setMedia(content)
-        dialog = SongView(self, player, song)
-        dialog.name_label.setText(song.name)
-        dialog.artist_label.setText(song.artist_name)
-        dialog.record_label.setText(song.album_name)
-        dialog.setWindowTitle(song.name)
-        dialog.exec()
+        self.init_player(song)
+        self.play_stop_button.clicked.connect(self.play_stop)
+        self.playing = False
+        self.player.positionChanged.connect(self.position_changed)
+        self.song_slider.enable()
+        self.song_slider.valueChanged.connect(self.slider_moved)
+        self.song_slider.setMaximum(song.duration)
+        self.name_label.setText(song.name)
+        self.artist_label.setText(song.artist_name)
+        self.record_label.setText(song.album_name)
 
-    @log_action
-    def refresh_list(self):
-        self.songs_list.clear()
-        songs = Track.get_all()
-        self.songs_list.addItems([e.name for e in songs])
+    def play_stop(self):
+        if not self.playing:
+            if not self.started:
+                self.started = True
+            else:
+                self.player.setPosition(self.stop_position)
+            self.player.play()
+            self.playing = True
+            self.play_stop_button.setText('STOP')
+
+        else:
+            self.stop_position = self.player.position()
+            self.playing = False
+            self.player.stop()
+            self.play_stop_button.setText('PLAY')
