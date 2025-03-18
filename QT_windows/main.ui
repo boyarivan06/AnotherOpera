@@ -6,36 +6,55 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>390</width>
-    <height>363</height>
+    <width>574</width>
+    <height>549</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Другая опера</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QPushButton" name="add_song_button">
+   <widget class="QWidget" name="gridLayoutWidget">
     <property name="geometry">
      <rect>
-      <x>120</x>
-      <y>260</y>
-      <width>151</width>
-      <height>32</height>
+      <x>40</x>
+      <y>20</y>
+      <width>471</width>
+      <height>431</height>
      </rect>
     </property>
-    <property name="text">
-     <string>Добавить песню</string>
-    </property>
-   </widget>
-   <widget class="QListWidget" name="songs_list">
-    <property name="geometry">
-     <rect>
-      <x>50</x>
-      <y>30</y>
-      <width>256</width>
-      <height>192</height>
-     </rect>
-    </property>
+    <layout class="QGridLayout" name="gridLayout">
+     <item row="0" column="1">
+      <widget class="QLabel" name="label_2">
+       <property name="text">
+        <string>Альбом</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="1">
+      <widget class="QListWidget" name="albums_list"/>
+     </item>
+     <item row="0" column="0">
+      <widget class="QLabel" name="label">
+       <property name="text">
+        <string>Артист</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="0">
+      <widget class="QListWidget" name="artists_list"/>
+     </item>
+     <item row="3" column="0">
+      <widget class="QListWidget" name="songs_list"/>
+     </item>
+     <item row="2" column="0">
+      <widget class="QLabel" name="label_3">
+       <property name="text">
+        <string>Песни</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
@@ -43,7 +62,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>390</width>
+     <width>574</width>
      <height>37</height>
     </rect>
    </property>

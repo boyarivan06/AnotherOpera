@@ -1,30 +1,48 @@
 import json
 import os
 from typing import Any
-# from config import SECRET_KEY
-
+from json import loads
 from requests import get, post, delete
-from config import API_ROOT
+from config import API_ROOT, API_CLIENT_ID
 from special import MetaControl, log_action
 
 
-class APIConnect(metaclass=MetaControl):  # Strategy pattern? + mixin
+class APIConnect(metaclass=MetaControl):
+    slots = []
+    def __init__(self, data):
+        for field in self.slots:
+            setattr(self, field, data[field])
     @classmethod
     @log_action
-    def get_all(cls):
-        res = get(API_ROOT + f'/{cls.__name__.lower()}')
-        if res.status_code == 403:
-            print("server doesn't working")
+    def get_all(cls, limit=10, **kwargs):
+        limit = limit if limit >= 10 else 10
+        limit = limit if limit <= 200 else 200
+        data = {'client_id':API_CLIENT_ID, 'format':'json', 'limit':limit}
+        resp = get(API_ROOT + f'/{cls.__name__.lower()}s/', {**data, **kwargs})
+        if resp.status_code != 200:
+            print('Нет доступа к API, проверьте интернет-соединение и всё такое')
             quit()
-        return json.loads(res.text)
+        resp_data = loads(resp.text)
+        result = []
+        if resp_data['headers']['status'] == 'success':
+            for elem in resp_data['results']:
+                obj = cls(elem)
+                result.append(obj)
+        return result
 
     @classmethod
     @log_action
-    def get_object_by_args(cls, **kwargs):
+    def get_object_by_name(cls, name):
         # request_json = json.dumps(kwargs)
-        resp = get(API_ROOT + f'/{cls.__name__.lower()}/one', kwargs)
-        data = json.loads(resp.text)
-        return cls.load(data)
+        data = {'client_id': API_CLIENT_ID, 'format': 'json', 'name':name}
+        resp = get(API_ROOT + f'/{cls.__name__.lower()}s/', data)
+        resp_data = loads(resp.text)
+        result = []
+        if resp_data['headers']['status'] == 'success':
+            for elem in resp_data['results']:
+                obj = cls(elem)
+                result.append(obj)
+        return result[0]
 
     @log_action
     def new_object(self) -> int:

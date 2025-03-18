@@ -3,3 +3,5 @@ Song
 Artist
 Record
 APIConnect
+Track
+Album

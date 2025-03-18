@@ -6,6 +6,7 @@ if os.path.exists(dotenv_path):
     load_dotenv(dotenv_path)
 MEDIA_ROOT = os.path.join(os.getcwd(), 'media/')
 
-API_ROOT = 'http://127.0.0.1:5000/'
+API_ROOT = 'https://api.jamendo.com/v3.0/'
 
 # SECRET_KEY = dotenv_values()['SECRET_KEY']
+API_CLIENT_ID = 'e6ffd643'
