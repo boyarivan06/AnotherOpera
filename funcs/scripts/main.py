@@ -1,6 +1,7 @@
 import sys
 from PyQt5 import QtWidgets
 from funcs.interface import App
+from tg_bot import bot
 
 
 def main():
@@ -8,7 +9,3 @@ def main():
     window = App()
     window.show()
     app.exec_()
-
-
-if __name__ == '__main__':
-    main()

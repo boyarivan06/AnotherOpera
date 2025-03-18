@@ -10,3 +10,5 @@ API_ROOT = 'https://api.jamendo.com/v3.0/'
 
 # SECRET_KEY = dotenv_values()['SECRET_KEY']
 API_CLIENT_ID = 'e6ffd643'
+
+TG_BOT_TOKEN = '7955128559:AAHITTZxBizFeG_nmyBzMrB4Dwu5QFvEbC4'

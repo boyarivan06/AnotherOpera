@@ -144,14 +144,21 @@ class App(QMainWindow):
         self.artist_search.textEdited.connect(self.search_artist)
         self.album_search.textEdited.connect(self.search_album)
         self.song_search.textEdited.connect(self.search_song)
+        self.player = QtMultimedia.QMediaPlayer()
+        self.player.positionChanged.connect(self.position_changed)
+        self.song_slider.valueChanged.connect(self.slider_moved)
+        self.play_stop_button.clicked.connect(self.play_stop)
 
 
-    def init_player(self, song):
+    def change_song(self, song):
         url = QtCore.QUrl(song.audio)
         content = QtMultimedia.QMediaContent(url)
-        player = QtMultimedia.QMediaPlayer()
-        player.setMedia(content)
-        self.player = player
+        self.player.stop()
+        self.player.setMedia(content)
+        self.playing = False
+        self.play_stop_button.setText('PLAY')
+        self.player.setPosition(1)
+        self.started = False
 
     @log_action
     def slider_moved(self, value):
@@ -165,7 +172,7 @@ class App(QMainWindow):
 
     @log_action
     def get_albums(self, item, search=''):
-        self.current_artist = Artist.get_object_by_name(item.text() if not isinstance(item, APIConnect) else item.name)
+        self.current_artist = Artist.get_one(name=(item.text() if not isinstance(item, APIConnect) else item.name))
         albums = Album.get_all(artist_name=self.current_artist.name, namesearch=search)
         self.albums_list.clear()
         self.albums_list.addItems([e.name for e in albums])
@@ -191,7 +198,9 @@ class App(QMainWindow):
 
     @log_action
     def get_songs(self, item, search=''):
-        self.current_album = Album.get_object_by_name(item.text() if not isinstance(item, APIConnect) else item.name)
+        self.current_album = Album.get_one(name=(item.text() if not isinstance(item, APIConnect) else item.name))
+        if not self.current_album:
+            return
         songs = Track.get_all(album_name=self.current_album.name)
         self.songs_list.clear()
         self.songs_list.addItems([e.name for e in songs])
@@ -203,14 +212,10 @@ class App(QMainWindow):
 
     @log_action
     def show_song(self, item):
-        song = Track.get_object_by_name(name=item.text())
-        self.init_player(song)
-        self.play_stop_button.clicked.connect(self.play_stop)
-        self.playing = False
-        self.player.positionChanged.connect(self.position_changed)
-        self.song_slider.enable()
-        self.song_slider.valueChanged.connect(self.slider_moved)
+        song = Track.get_one(name=item.text(), artist_name=self.current_artist.name)
+        self.change_song(song)
         self.song_slider.setMaximum(song.duration)
+        self.song_slider.setSliderPosition(1)
         self.name_label.setText(song.name)
         self.artist_label.setText(song.artist_name)
         self.record_label.setText(song.album_name)

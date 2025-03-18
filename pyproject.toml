@@ -18,6 +18,7 @@ sqlalchemy = "^2.0.38"
 audioread = "^3.0.1"
 standard-aifc = "^3.13.0"
 standard-sunau = "^3.13.0"
+pytelegrambotapi = "^4.26.0"
 
 
 [tool.poetry.group.dev.dependencies]
@@ -42,5 +43,5 @@ lint.ignore = []
 exclude = [".git", "__pycache__", "venv", ".venv"]
 
 [tool.poetry.scripts]
-project = "funcs.scripts.main_inter:main"
-lab = "funcs.scripts.labbing:main"
+project = "funcs.scripts.main:main"
+bot = "funcs.scripts.bot:main"

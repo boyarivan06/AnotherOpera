@@ -9,6 +9,7 @@ from special import MetaControl, log_action
 
 class APIConnect(metaclass=MetaControl):
     slots = []
+    name = 'APIConnector'
     def __init__(self, data):
         for field in self.slots:
             setattr(self, field, data[field])
@@ -17,8 +18,8 @@ class APIConnect(metaclass=MetaControl):
     def get_all(cls, limit=10, **kwargs):
         limit = limit if limit >= 10 else 10
         limit = limit if limit <= 200 else 200
-        data = {'client_id':API_CLIENT_ID, 'format':'json', 'limit':limit}
-        resp = get(API_ROOT + f'/{cls.__name__.lower()}s/', {**data, **kwargs})
+        data = {'client_id':API_CLIENT_ID, 'format':'json', 'limit':limit, **kwargs}
+        resp = get(API_ROOT + f'{cls.__name__.lower()}s/', data)
         if resp.status_code != 200:
             print('Нет доступа к API, проверьте интернет-соединение и всё такое')
             quit()
@@ -32,17 +33,17 @@ class APIConnect(metaclass=MetaControl):
 
     @classmethod
     @log_action
-    def get_object_by_name(cls, name):
-        # request_json = json.dumps(kwargs)
-        data = {'client_id': API_CLIENT_ID, 'format': 'json', 'name':name}
-        resp = get(API_ROOT + f'/{cls.__name__.lower()}s/', data)
+    def get_one(cls, **kwargs):
+        data = {'client_id': API_CLIENT_ID, 'format': 'json', **kwargs}
+        resp = get(API_ROOT + f'{cls.__name__.lower()}s/', data)
         resp_data = loads(resp.text)
         result = []
         if resp_data['headers']['status'] == 'success':
             for elem in resp_data['results']:
                 obj = cls(elem)
                 result.append(obj)
-        return result[0]
+            return result[0] if result else None
+        return
 
     @log_action
     def new_object(self) -> int:
@@ -58,3 +59,6 @@ class APIConnect(metaclass=MetaControl):
 
     def get_dict(self):
         return {self.__dict__[k] for k in self.slots}
+
+    def __str__(self):
+        return f'{self.__class__.__name__} {self.name}'

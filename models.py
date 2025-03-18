@@ -25,7 +25,8 @@ class Track(APIConnect, metaclass=MetaControl):
     album_image = Descriptor()
     audio = Descriptor()
     duration = Descriptor()
-    slots = ['id', 'name', 'album_id', 'album_name', 'artist_id', 'artist_name', 'album_image', 'audio', 'duration']
+    audiodownload = Descriptor()
+    slots = ['id', 'name', 'album_id', 'album_name', 'artist_id', 'artist_name', 'album_image', 'audio', 'duration', 'audiodownload']
 
     ''''@log_action
     def __init__(self, name='empty', duration=None,
