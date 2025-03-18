@@ -5,8 +5,9 @@ import shutil
 from PyQt5.QtWidgets import QMainWindow, QDialog, QFileDialog
 from PyQt5 import uic, QtCore, QtMultimedia
 
+from api import APIConnect
 from special import log_action
-from models import Track
+from models import Track, Album, Artist
 from config import MEDIA_ROOT
 
 
@@ -132,13 +133,54 @@ class SongView(QDialog):
             self.song_slider.setSliderPosition(position)
 
 class App(QMainWindow):
+    current_artist = None
+    current_album = None
     @log_action
     def __init__(self):
         super().__init__()
         uic.loadUi('QT_windows/main.ui', self)
         # self.add_song_button.clicked.connect(self.create_song_dialog)
-        self.refresh_list()  # TODO: make async
+        self.get_artists()  # TODO: make async
         self.songs_list.itemClicked.connect(self.show_song)
+        self.artists_list.itemClicked.connect(self.get_albums)
+        self.albums_list.itemClicked.connect(self.get_songs)
+        self.artist_search.textEdited.connect(self.search_artist)
+        self.album_search.textEdited.connect(self.search_album)
+        self.song_search.textEdited.connect(self.search_song)
+
+
+    @log_action
+    def get_albums(self, item, search=''):
+        self.current_artist = Artist.get_object_by_name(item.text() if not isinstance(item, APIConnect) else item.name)
+        albums = Album.get_all(artist_name=self.current_artist.name, namesearch=search)
+        self.albums_list.clear()
+        self.albums_list.addItems([e.name for e in albums])
+
+    def search_artist(self):
+        search = self.artist_search.text()
+        self.get_artists(search=search)
+
+    def search_album(self):
+        search = self.album_search.text()
+        self.get_albums(self.current_artist, search=search)
+
+    def search_song(self):
+        search = self.artist_search.text()
+        self.get_songs(self.current_album, search=search)
+
+    @log_action
+    def get_artists(self, search=''):
+        artists = Artist.get_all(namesearch=search)
+        self.artists_list.clear()
+        self.artists_list.addItems([e.name for e in artists])
+
+
+    @log_action
+    def get_songs(self, item, search=''):
+        self.current_album = Album.get_object_by_name(item.text() if not isinstance(item, APIConnect) else item.name)
+        songs = Track.get_all(album_name=self.current_album.name)
+        self.songs_list.clear()
+        self.songs_list.addItems([e.name for e in songs])
 
     def create_song_dialog(self):
         dialog = NewSongForm(self)

@@ -42,11 +42,6 @@ class Track(APIConnect, metaclass=MetaControl):
 
     def __str__(self):
         return f'{self.name} by {self.artist_name}'
-    @log_action
-    def get_dict(self):
-        return {'name':self.name, 'artist':self.artist_name,
-                'record':self.album_name,
-                'file_path':self.audio}
 
 
 class Artist(APIConnect, metaclass=MetaControl):

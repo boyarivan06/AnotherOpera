@@ -56,10 +56,5 @@ class APIConnect(metaclass=MetaControl):
                       data=self.__dict__)
         return resp.status_code
 
-    @classmethod
-    def load(cls, data: dict[str, Any]):
-        new_s = cls.__new__(cls)
-        new_s.__init__()
-        for k in data:
-            new_s.__dict__[k] = data[k]
-        return new_s
+    def get_dict(self):
+        return {self.__dict__[k] for k in self.slots}
