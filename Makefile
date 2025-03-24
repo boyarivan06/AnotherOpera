@@ -10,3 +10,5 @@ lint:
 	poetry run ruff check --fix
 lab:
 	poetry run lab
+project:
+	poetry run project

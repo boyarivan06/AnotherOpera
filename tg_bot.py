@@ -2,6 +2,7 @@ from telebot import TeleBot
 from telebot.types import KeyboardButton, ReplyKeyboardMarkup, InlineKeyboardMarkup, InlineKeyboardButton, \
     ReplyKeyboardRemove
 from config import TG_BOT_TOKEN
+from custom_exc import APIFailException
 from models import Track, Album, Artist
 
 
@@ -36,11 +37,31 @@ def search(msg, cls):
 
 
 def get_object(msg, cls):
-    result = cls.get_one(name=msg.text)
+    try:
+        result = cls.get_one(name=msg.text)
+    except APIFailException:
+        bot.send_message(msg.chat.id, f'Ничего не найдено по запросу `{msg.text}`')
+        return
+    if not result:
+        bot.send_message(msg.chat.id, f'Ничего не найдено по запросу `{msg.text}`')
     bot.delete_message(msg.chat.id, msg.id-1)
     bot.delete_message(msg.chat.id, msg.id)
-    bot.send_audio(msg.chat.id, result.audio, reply_markup=ReplyKeyboardRemove())
-
+    if cls == Track:
+        bot.send_audio(msg.chat.id, result.audio, reply_markup=ReplyKeyboardRemove())
+    elif cls == Album:
+        data = Track.get_all(album_id=result.id, limit='all')
+        btns = [KeyboardButton(obj.name) for obj in data]
+        markup = ReplyKeyboardMarkup()
+        markup.add(*btns)
+        bot.send_photo(msg.chat.id, result.image, caption=f'{result.name} by {result.artist_name}', reply_markup=markup)
+        bot.register_next_step_handler(msg, get_object, Track)
+    elif cls == Artist:
+        data = Album.get_all()
+        btns = [KeyboardButton(obj.name) for obj in data]
+        markup = ReplyKeyboardMarkup()
+        markup.add(*btns)
+        bot.send_photo(msg.chat.id, result.image, caption=f'{result.name}', reply_markup=markup)
+        bot.register_next_step_handler(msg, get_object, Album)
 
 @bot.message_handler(content_types=['text'])
 def text(msg):

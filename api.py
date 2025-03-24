@@ -4,6 +4,7 @@ from typing import Any
 from json import loads
 from requests import get, post, delete
 from config import API_ROOT, API_CLIENT_ID
+from custom_exc import APIFailException
 from special import MetaControl, log_action
 
 
@@ -15,9 +16,12 @@ class APIConnect(metaclass=MetaControl):
             setattr(self, field, data[field])
     @classmethod
     @log_action
-    def get_all(cls, limit=10, **kwargs):
-        limit = limit if limit >= 10 else 10
-        limit = limit if limit <= 200 else 200
+    def get_all(cls, limit: int|str = 15, **kwargs):
+        if type(limit) == str:
+            limit = 'all'
+        else:
+            limit = limit if limit >= 10 else 10
+            limit = limit if limit <= 200 else 200
         data = {'client_id':API_CLIENT_ID, 'format':'json', 'limit':limit, **kwargs}
         resp = get(API_ROOT + f'{cls.__name__.lower()}s/', data)
         if resp.status_code != 200:
@@ -29,6 +33,8 @@ class APIConnect(metaclass=MetaControl):
             for elem in resp_data['results']:
                 obj = cls(elem)
                 result.append(obj)
+        else:
+            raise APIFailException
         return result
 
     @classmethod
@@ -43,7 +49,7 @@ class APIConnect(metaclass=MetaControl):
                 obj = cls(elem)
                 result.append(obj)
             return result[0] if result else None
-        return
+        raise APIFailException
 
     @log_action
     def new_object(self) -> int:
