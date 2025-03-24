@@ -47,7 +47,7 @@ def get_object(msg, cls):
     bot.delete_message(msg.chat.id, msg.id-1)
     bot.delete_message(msg.chat.id, msg.id)
     if cls == Track:
-        bot.send_audio(msg.chat.id, result.audio, reply_markup=ReplyKeyboardRemove())
+        bot.send_audio(msg.chat.id, result.audio, caption=f'{result.name} by {result.artist_name}', reply_markup=ReplyKeyboardRemove())
     elif cls == Album:
         data = Track.get_all(album_id=result.id, limit='all')
         btns = [KeyboardButton(obj.name) for obj in data]

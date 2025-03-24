@@ -31,8 +31,8 @@ class App(QMainWindow):
         self.song_slider.valueChanged.connect(self.slider_moved)
         self.play_stop_button.clicked.connect(self.play_stop)
 
-    def warning(self):
-
+    def warning(self, text):
+        self.warning_label.changeText(text)
 
     def change_song(self, song):
         url = QtCore.QUrl(song.audio)
