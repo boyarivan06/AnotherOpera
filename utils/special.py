@@ -1,6 +1,6 @@
 import functools
-from loguru import logger
 
+from loguru import logger
 
 logger.add(
     "../app.log",

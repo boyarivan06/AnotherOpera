@@ -23,6 +23,8 @@ standard-sunau = "^3.13.0"
 pytelegrambotapi = "^4.26.0"
 loguru = "^0.7.3"
 black = "^25.1.0"
+isort = "^6.0.1"
+mypy = "^1.15.0"
 
 
 [tool.poetry.group.dev.dependencies]

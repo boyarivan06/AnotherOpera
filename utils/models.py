@@ -1,5 +1,6 @@
-from .special import MetaControl
 from utils.api import APIConnect
+
+from .special import MetaControl
 
 
 class Descriptor(metaclass=MetaControl):

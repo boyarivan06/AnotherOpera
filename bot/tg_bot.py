@@ -1,9 +1,9 @@
 from telebot import TeleBot
 from telebot.types import KeyboardButton, ReplyKeyboardMarkup, ReplyKeyboardRemove
+
 from config import TG_BOT_TOKEN
 from utils.custom_exc import APIFailException
-from utils.models import Track, Album, Artist
-
+from utils.models import Album, Artist, Track
 
 bot = TeleBot(TG_BOT_TOKEN)
 
