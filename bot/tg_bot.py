@@ -1,6 +1,5 @@
 from telebot import TeleBot
-from telebot.types import (KeyboardButton, ReplyKeyboardMarkup,
-                           ReplyKeyboardRemove)
+from telebot.types import KeyboardButton, ReplyKeyboardMarkup, ReplyKeyboardRemove
 
 from config import TG_BOT_TOKEN
 from utils.custom_exc import APIFailException
@@ -82,8 +81,3 @@ def get_object(msg, cls):
             msg.chat.id, result.image, caption=f"{result.name}", reply_markup=markup
         )
         bot.register_next_step_handler(msg, get_object, Album)
-
-
-@bot.message_handler(content_types=["text"])
-def text(msg):
-    pass
