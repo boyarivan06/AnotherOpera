@@ -32,13 +32,24 @@ class App(QMainWindow):
         self.song_slider.valueChanged.connect(self.slider_moved)
         self.play_stop_button.clicked.connect(self.play_stop)
 
-    def warn(self, text):
+    def warn(self, text: str):
+        """
+        Помещает text в поле для предупреждений
+        :param text: текст сообщения
+        """
         self.warning_label.setText(text)
 
     def dewarn(self):
+        """
+        Удаляет текст из поля для предупреждений
+        """
         self.warning_label.setText("")
 
-    def change_song(self, song):
+    def change_song(self, song: Track):
+        """
+        Меняет песню в плеере
+        :param song:
+        """
         url = QtCore.QUrl(song.audio)
         content = QtMultimedia.QMediaContent(url)
         self.player.stop()
@@ -49,16 +60,30 @@ class App(QMainWindow):
         self.started = False
 
     @log_action
-    def slider_moved(self, value):
+    def slider_moved(self, value: int):
+        """
+        Кто-то подвинул слайдер на позицию value
+        :param value: новая позиция слайдера
+        """
         self.player.setPosition(value)
 
     @log_action
     def position_changed(self, position):
+        """
+        Песня плывёт, сердце поёт. Соответственно двигаем слайдер
+        :param position: позиция плеера
+        """
         if self.playing:
             self.song_slider.setSliderPosition(position)
 
     @log_action
     def get_albums(self, item, search=""):
+        """
+
+        :param item:
+        :param search:
+        :return:
+        """
         try:
             self.current_artist = Artist.get_one(
                 name=(item.text() if not isinstance(item, APIConnect) else item.name)
@@ -121,6 +146,11 @@ class App(QMainWindow):
 
     @log_action
     def show_song(self, item):
+        """
+        Отображение песни - смена песни в плеере, заполнение полей интерфейса плеера
+        :param item: элемент ListWidget
+        :return:
+        """
         self.dewarn()
         song = None
         try:
@@ -136,6 +166,9 @@ class App(QMainWindow):
         self.record_label.setText(song.album_name)
 
     def play_stop(self):
+        """
+        Нажатие кнопки PLAY/STOP
+        """
         if not self.playing:
             if not self.started:
                 self.started = True
