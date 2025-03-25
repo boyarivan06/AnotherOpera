@@ -1,10 +1,10 @@
+from PyQt5 import QtCore, QtMultimedia, uic
 from PyQt5.QtWidgets import QMainWindow
-from PyQt5 import uic, QtCore, QtMultimedia
 
 from utils.api import APIConnect
 from utils.custom_exc import APIFailException
+from utils.models import Album, Artist, Track
 from utils.special import log_action
-from utils.models import Track, Album, Artist
 
 
 class App(QMainWindow):

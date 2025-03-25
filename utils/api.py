@@ -1,13 +1,17 @@
 from json import loads
-from requests import get, post, delete
-from config import API_ROOT, API_CLIENT_ID
+
+from requests import delete, get, post
+
+from config import API_CLIENT_ID, API_ROOT
+
 from .custom_exc import APIFailException
+from .models import Descriptor
 from .special import MetaControl, log_action
 
 
 class APIConnect(metaclass=MetaControl):
     slots = []
-    name = "APIConnector"
+    name = Descriptor()
 
     def __init__(self, data):
         for field in self.slots:

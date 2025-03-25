@@ -17,12 +17,10 @@ python-dotenv = "^1.0.1"
 prompt = "^0.4.1"
 pyqt5 = "^5.15.11"
 sqlalchemy = "^2.0.38"
-audioread = "^3.0.1"
-standard-aifc = "^3.13.0"
-standard-sunau = "^3.13.0"
 pytelegrambotapi = "^4.26.0"
 loguru = "^0.7.3"
 black = "^25.1.0"
+isort = "^6.0.1"
 
 
 [tool.poetry.group.dev.dependencies]

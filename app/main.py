@@ -1,5 +1,7 @@
 import sys
+
 from PyQt5 import QtWidgets
+
 from app.interface import App
 
 
