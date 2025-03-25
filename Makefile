@@ -11,6 +11,7 @@ run:
 bot:
 	poetry run bot
 lint:
+	black .
 	poetry run ruff check --fix
 app:
 	poetry run app

@@ -22,6 +22,7 @@ standard-aifc = "^3.13.0"
 standard-sunau = "^3.13.0"
 pytelegrambotapi = "^4.26.0"
 loguru = "^0.7.3"
+black = "^25.1.0"
 
 
 [tool.poetry.group.dev.dependencies]

@@ -24,31 +24,41 @@ class Track(APIConnect, metaclass=MetaControl):
     audio = Descriptor()
     duration = Descriptor()
     audiodownload = Descriptor()
-    slots = ['id', 'name', 'album_id', 'album_name', 'artist_id',
-             'artist_name', 'album_image', 'audio', 'duration', 'audiodownload']
+    slots = [
+        "id",
+        "name",
+        "album_id",
+        "album_name",
+        "artist_id",
+        "artist_name",
+        "album_image",
+        "audio",
+        "duration",
+        "audiodownload",
+    ]
 
-    ''''@log_action
+    """'@log_action
     def __init__(self, name='empty', duration=None,
                  artist=None, record=None, file_path=None):
         self.artist = artist
         self.name = name
         self.duration = duration
         self.file_path = file_path
-        self.record = record'''
+        self.record = record"""
+
     def __init__(self, data):
         super().__init__(data)
         self.duration *= 1000
 
-
     def __str__(self):
-        return f'{self.name} by {self.artist_name}'
+        return f"{self.name} by {self.artist_name}"
 
 
 class Artist(APIConnect, metaclass=MetaControl):
     id = Descriptor()
     name = Descriptor()
     image = Descriptor()
-    slots = ['id', 'name', 'image']
+    slots = ["id", "name", "image"]
 
 
 class Album(APIConnect, metaclass=MetaControl):
@@ -57,4 +67,4 @@ class Album(APIConnect, metaclass=MetaControl):
     artist_id = Descriptor()
     artist_name = Descriptor()
     image = Descriptor()
-    slots = ['id', 'name', 'artist_id', 'artist_name', 'image']
+    slots = ["id", "name", "artist_id", "artist_name", "image"]
