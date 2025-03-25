@@ -1,18 +1,6 @@
 from utils.api import APIConnect
 
-from .special import MetaControl
-
-
-class Descriptor(metaclass=MetaControl):
-    def __set_name__(self, owner, name):
-        self.name = "_" + name
-
-    def __get__(self, instance, owner):
-        return getattr(instance, self.name)
-
-    def __set__(self, instance, value):
-        setattr(instance, self.name, value)
-
+from .special import MetaControl, Descriptor
 
 class Track(APIConnect, metaclass=MetaControl):
     id = Descriptor()

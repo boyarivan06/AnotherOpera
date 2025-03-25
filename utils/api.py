@@ -1,12 +1,13 @@
 from json import loads
 
+import requests
 from requests import delete, get, post
 
 from config import API_CLIENT_ID, API_ROOT
 
 from .custom_exc import APIFailException
-from .models import Descriptor
-from .special import MetaControl, log_action
+# from .models import Descriptor
+from .special import MetaControl, log_action, Descriptor
 
 
 class APIConnect(metaclass=MetaControl):
@@ -26,8 +27,10 @@ class APIConnect(metaclass=MetaControl):
             limit = limit if limit >= 10 else 10
             limit = limit if limit <= 200 else 200
         data = {"client_id": API_CLIENT_ID, "format": "json", "limit": limit, **kwargs}
-        resp = get(API_ROOT + f"{cls.__name__.lower()}s/", data)
-        if resp.status_code != 200:
+        resp = None
+        try:
+            resp = get(API_ROOT + f"{cls.__name__.lower()}s/", data)
+        except requests.exceptions.ConnectionError or resp.status_code != 200 or not resp:
             print("Нет доступа к API, проверьте интернет-соединение и всё такое")
             quit()
         resp_data = loads(resp.text)

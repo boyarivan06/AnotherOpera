@@ -20,32 +20,17 @@
 │     ├── select_song.ui
 │     └── song_view.ui
 ├── README.md
-├── __pycache__
-│     └── config.cpython-313.pyc
 ├── app
 │     ├── __init__.py
-│     ├── __pycache__
-│     │     ├── __init__.cpython-313.pyc
-│     │     └── interface.cpython-313.pyc
 │     ├── interface.py
 │     └── main.py
-├── app.log
 ├── bot
 │     ├── __init__.py
 │     ├── main.py
 │     └── tg_bot.py
 ├── config.py
-├── dist
-│     ├── another opera-0.1.0-py3-none-any.whl
-│     └── another opera-0.1.0.tar.gz
 ├── poetry.lock
 ├── pyproject.toml
-├── screenshots
-│     ├── app1.png
-│     ├── app2.png
-│     ├── tg1.png
-│     ├── tg2.png
-│     └── tg3.png
 └── utils
     ├── __init__.py
     ├── api.py
@@ -56,16 +41,15 @@
 ```
 ## Объяснение структуры проекта
 * app - исходный код приложения
-* QT_windows - файлы UI для приложения
 * bot - исходный код бота
-* screenshots - снимки экрана для этого README
 * utils - исходный код утилит API, логирования, моделей
-* Makefile - 
+* QT_windows - файлы UI для приложения
 
 ## Инструкция по установке, настройке и запуску проекта
 #### Установка:
-1. `make install`
-2. `make build`
+1. Установите Poetry
+2. `make install`
+3. `make build`
 #### Запуск
 `make run`
 

@@ -9,6 +9,7 @@ from telebot.types import (
 )
 
 from config import TG_BOT_TOKEN
+from utils.api import APIConnect
 from utils.custom_exc import APIFailException
 from utils.models import Album, Artist, Track
 
@@ -47,7 +48,7 @@ def start_search(msg: Message) -> None:
     bot.register_next_step_handler(msg, search, cls)
 
 
-def search(msg: Message, cls: Type[Track, Album, Artist]) -> None:
+def search(msg: Message, cls: Type[APIConnect]) -> None:
     """
     Поиск по введённому запросу в соответствующей таблице.
     Выдаёт клавиатуру с названиями найденных элементов
@@ -64,7 +65,7 @@ def search(msg: Message, cls: Type[Track, Album, Artist]) -> None:
     bot.register_next_step_handler(msg, get_object, cls)
 
 
-def get_object(msg: Message, cls: Type[Track, Album, Artist]) -> None:
+def get_object(msg: Message, cls: Type[APIConnect]) -> None:
     """
     Возвращает найденный элемент в зависимости от типа: Artist - список альбомов,
     Album - список песен, Track - песню для прослушивания
