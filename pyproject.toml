@@ -1,11 +1,13 @@
 [tool.poetry]
 name = "another opera"
-version = "0.1.0"
+version = "0.4.2"
 description = ""
 authors = ["Ivan Boyarintsev <boyarivan06@gmail.com>"]
 readme = "README.md"
 packages = [
-    {include = "funcs"},
+    {include = "app"},
+    {include = "bot"},
+    {include = "utils"},
 ]
 repository = "https://gitlab.digital.mephi.ru/boyarivan06/another-opera.git"
 
@@ -19,6 +21,7 @@ audioread = "^3.0.1"
 standard-aifc = "^3.13.0"
 standard-sunau = "^3.13.0"
 pytelegrambotapi = "^4.26.0"
+loguru = "^0.7.3"
 
 
 [tool.poetry.group.dev.dependencies]
@@ -43,5 +46,5 @@ lint.ignore = []
 exclude = [".git", "__pycache__", "venv", ".venv"]
 
 [tool.poetry.scripts]
-project = "funcs.scripts.main:main"
-bot = "funcs.scripts.bot:main"
+app = "app.main:main"
+bot = "bot.main:main"

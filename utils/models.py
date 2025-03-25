@@ -1,7 +1,5 @@
-import audioread
-
-from special import log_action, MetaControl
-from api import APIConnect
+from .special import MetaControl
+from utils.api import APIConnect
 
 
 class Descriptor(metaclass=MetaControl):
@@ -26,7 +24,8 @@ class Track(APIConnect, metaclass=MetaControl):
     audio = Descriptor()
     duration = Descriptor()
     audiodownload = Descriptor()
-    slots = ['id', 'name', 'album_id', 'album_name', 'artist_id', 'artist_name', 'album_image', 'audio', 'duration', 'audiodownload']
+    slots = ['id', 'name', 'album_id', 'album_name', 'artist_id',
+             'artist_name', 'album_image', 'audio', 'duration', 'audiodownload']
 
     ''''@log_action
     def __init__(self, name='empty', duration=None,

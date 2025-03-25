@@ -1,7 +1,6 @@
 import sys
 from PyQt5 import QtWidgets
-from funcs.interface import App
-from tg_bot import bot
+from app.interface import App
 
 
 def main():

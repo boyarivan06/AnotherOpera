@@ -287,3 +287,5 @@ pyrightconfig.json
 data/*
 
 media/*
+
+classes.txt

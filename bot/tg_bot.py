@@ -1,9 +1,8 @@
 from telebot import TeleBot
-from telebot.types import KeyboardButton, ReplyKeyboardMarkup, InlineKeyboardMarkup, InlineKeyboardButton, \
-    ReplyKeyboardRemove
+from telebot.types import KeyboardButton, ReplyKeyboardMarkup, ReplyKeyboardRemove
 from config import TG_BOT_TOKEN
-from custom_exc import APIFailException
-from models import Track, Album, Artist
+from utils.custom_exc import APIFailException
+from utils.models import Track, Album, Artist
 
 
 bot = TeleBot(TG_BOT_TOKEN)
@@ -12,7 +11,7 @@ bot = TeleBot(TG_BOT_TOKEN)
 def start(msg):
     bot.send_message(msg.chat.id, 'Привет, я бот проекта Another Opera\n'
           'Найдите песню по артисту, альбому или названию, '
-          'используя команды  /search_track')  # /search_artist, /search_album,
+          'используя команды /search_artist, /search_album, /search_track')
 
 @bot.message_handler(commands=['search_artist', 'search_album', 'search_track'])
 def start_search(msg):
@@ -32,7 +31,8 @@ def search(msg, cls):
     btns = [KeyboardButton(obj.name) for obj in data]
     markup = ReplyKeyboardMarkup()
     markup.add(*btns)
-    bot.send_message(msg.chat.id, text="Выберите песню из предложенных", reply_markup=markup)
+    bot.send_message(msg.chat.id, text="Выберите название из предложенных",
+                     reply_markup=markup)
     bot.register_next_step_handler(msg, get_object, cls)
 
 
@@ -47,20 +47,25 @@ def get_object(msg, cls):
     bot.delete_message(msg.chat.id, msg.id-1)
     bot.delete_message(msg.chat.id, msg.id)
     if cls == Track:
-        bot.send_audio(msg.chat.id, result.audio, caption=f'{result.name} by {result.artist_name}', reply_markup=ReplyKeyboardRemove())
+        bot.send_audio(msg.chat.id, result.audio,
+                       caption=f'{result.name} by {result.artist_name}',
+                       reply_markup=ReplyKeyboardRemove())
     elif cls == Album:
         data = Track.get_all(album_id=result.id, limit='all')
         btns = [KeyboardButton(obj.name) for obj in data]
         markup = ReplyKeyboardMarkup()
         markup.add(*btns)
-        bot.send_photo(msg.chat.id, result.image, caption=f'{result.name} by {result.artist_name}', reply_markup=markup)
+        bot.send_photo(msg.chat.id, result.image,
+                       caption=f'{result.name} by {result.artist_name}',
+                       reply_markup=markup)
         bot.register_next_step_handler(msg, get_object, Track)
     elif cls == Artist:
-        data = Album.get_all()
+        data = Album.get_all(artist_id=result.id, limit='all')
         btns = [KeyboardButton(obj.name) for obj in data]
         markup = ReplyKeyboardMarkup()
         markup.add(*btns)
-        bot.send_photo(msg.chat.id, result.image, caption=f'{result.name}', reply_markup=markup)
+        bot.send_photo(msg.chat.id, result.image,
+                       caption=f'{result.name}', reply_markup=markup)
         bot.register_next_step_handler(msg, get_object, Album)
 
 @bot.message_handler(content_types=['text'])

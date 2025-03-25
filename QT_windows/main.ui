@@ -24,7 +24,77 @@
      </rect>
     </property>
     <layout class="QGridLayout" name="gridLayout">
-     <item row="7" column="2">
+     <item row="5" column="1" colspan="2">
+      <widget class="QLabel" name="label_3">
+       <property name="text">
+        <string>Песни</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="1">
+      <widget class="QLabel" name="label">
+       <property name="text">
+        <string>Артист</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="2">
+      <widget class="QLineEdit" name="album_search">
+       <property name="placeholderText">
+        <string>Поиск по альбомам</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="1">
+      <widget class="QLineEdit" name="artist_search">
+       <property name="placeholderText">
+        <string>Поиск по артистам</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="2">
+      <widget class="QLabel" name="label_2">
+       <property name="text">
+        <string>Альбом</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
+       </property>
+      </widget>
+     </item>
+     <item row="7" column="1">
+      <widget class="QListWidget" name="songs_list"/>
+     </item>
+     <item row="3" column="1">
+      <widget class="QListWidget" name="artists_list"/>
+     </item>
+     <item row="6" column="1">
+      <widget class="QLineEdit" name="song_search">
+       <property name="placeholderText">
+        <string>Поиск по песням</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="2">
+      <widget class="QListWidget" name="albums_list"/>
+     </item>
+     <item row="0" column="1" colspan="2">
+      <widget class="QLabel" name="warning_label">
+       <property name="styleSheet">
+        <string notr="true">color:red</string>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+     </item>
+     <item row="6" column="2" rowspan="2">
       <layout class="QFormLayout" name="formLayout">
        <item row="0" column="0">
         <widget class="QLabel" name="label_4">
@@ -104,83 +174,6 @@
         </widget>
        </item>
       </layout>
-     </item>
-     <item row="5" column="1" colspan="2">
-      <widget class="QLabel" name="label_3">
-       <property name="text">
-        <string>Песни</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignCenter</set>
-       </property>
-      </widget>
-     </item>
-     <item row="6" column="2">
-      <widget class="QCheckBox" name="global_box">
-       <property name="text">
-        <string>Глобальный поиск</string>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="1">
-      <widget class="QLabel" name="label">
-       <property name="text">
-        <string>Артист</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignCenter</set>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="2">
-      <widget class="QLineEdit" name="album_search">
-       <property name="placeholderText">
-        <string>Поиск по альбомам</string>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="1">
-      <widget class="QLineEdit" name="artist_search">
-       <property name="placeholderText">
-        <string>Поиск по артистам</string>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="2">
-      <widget class="QLabel" name="label_2">
-       <property name="text">
-        <string>Альбом</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignCenter</set>
-       </property>
-      </widget>
-     </item>
-     <item row="7" column="1">
-      <widget class="QListWidget" name="songs_list"/>
-     </item>
-     <item row="3" column="1">
-      <widget class="QListWidget" name="artists_list"/>
-     </item>
-     <item row="6" column="1">
-      <widget class="QLineEdit" name="song_search">
-       <property name="placeholderText">
-        <string>Поиск по песням</string>
-       </property>
-      </widget>
-     </item>
-     <item row="3" column="2">
-      <widget class="QListWidget" name="albums_list"/>
-     </item>
-     <item row="0" column="1" colspan="2">
-      <widget class="QLabel" name="label_7">
-       <property name="styleSheet">
-        <string notr="true">color:ff0000</string>
-       </property>
-       <property name="text">
-        <string/>
-       </property>
-      </widget>
      </item>
     </layout>
    </widget>

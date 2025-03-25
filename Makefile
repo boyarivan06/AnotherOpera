@@ -2,13 +2,15 @@ install:
 	poetry install
 build:
 	poetry build
+	@if [test -f .env = '']; then \
+	    cat .env-example > .env; \
+	fi
+
 run:
-	poetry run bot | poetry run project
+	poetry run bot | poetry run app
 bot:
 	poetry run bot
 lint:
 	poetry run ruff check --fix
-lab:
-	poetry run lab
-project:
-	poetry run project
+app:
+	poetry run app

@@ -1,11 +1,8 @@
-import json
-import os
-from typing import Any
 from json import loads
 from requests import get, post, delete
 from config import API_ROOT, API_CLIENT_ID
-from custom_exc import APIFailException
-from special import MetaControl, log_action
+from .custom_exc import APIFailException
+from .special import MetaControl, log_action
 
 
 class APIConnect(metaclass=MetaControl):
@@ -17,7 +14,7 @@ class APIConnect(metaclass=MetaControl):
     @classmethod
     @log_action
     def get_all(cls, limit: int|str = 15, **kwargs):
-        if type(limit) == str:
+        if limit is str:
             limit = 'all'
         else:
             limit = limit if limit >= 10 else 10
@@ -33,9 +30,10 @@ class APIConnect(metaclass=MetaControl):
             for elem in resp_data['results']:
                 obj = cls(elem)
                 result.append(obj)
+            return result
         else:
             raise APIFailException
-        return result
+
 
     @classmethod
     @log_action

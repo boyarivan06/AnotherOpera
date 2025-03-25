@@ -1,10 +1,10 @@
 from PyQt5.QtWidgets import QMainWindow
 from PyQt5 import uic, QtCore, QtMultimedia
 
-from api import APIConnect
-from custom_exc import APIFailException
-from special import log_action
-from models import Track, Album, Artist
+from utils.api import APIConnect
+from utils.custom_exc import APIFailException
+from utils.special import log_action
+from utils.models import Track, Album, Artist
 
 
 class App(QMainWindow):
@@ -31,8 +31,11 @@ class App(QMainWindow):
         self.song_slider.valueChanged.connect(self.slider_moved)
         self.play_stop_button.clicked.connect(self.play_stop)
 
-    def warning(self, text):
-        self.warning_label.changeText(text)
+    def warn(self, text):
+        self.warning_label.setText(text)
+
+    def dewarn(self):
+        self.warning_label.setText('')
 
     def change_song(self, song):
         url = QtCore.QUrl(song.audio)
@@ -57,14 +60,18 @@ class App(QMainWindow):
     @log_action
     def get_albums(self, item, search=''):
         try:
-            self.current_artist = Artist.get_one(name=(item.text() if not isinstance(item, APIConnect) else item.name))
+            self.current_artist = (
+                Artist.get_one(name=(item.text()
+                                     if not isinstance(item, APIConnect)
+                                     else item.name)))
         except APIFailException:
-            self.warning('Артист не найден')
+            self.warn('Артист не найден')
             return
         try:
-            albums = Album.get_all(artist_name=self.current_artist.name, namesearch=search)
+            albums = Album.get_all(artist_name=self.current_artist.name,
+                                   namesearch=search)
         except APIFailException:
-            self.warning('Альбом не найден')
+            self.warn('Альбом не найден')
             return
         self.albums_list.clear()
         self.albums_list.addItems([e.name for e in albums])
@@ -83,10 +90,11 @@ class App(QMainWindow):
 
     @log_action
     def get_artists(self, search=''):
+        self.dewarn()
         try:
             artists = Artist.get_all(namesearch=search)
         except APIFailException:
-            self.warning('Артист не найден')
+            self.warn('Артист не найден')
             return
         self.artists_list.clear()
         self.artists_list.addItems([e.name for e in artists])
@@ -94,17 +102,20 @@ class App(QMainWindow):
 
     @log_action
     def get_songs(self, item, search=''):
+        self.dewarn()
         try:
-            self.current_album = Album.get_one(name=(item.text() if not isinstance(item, APIConnect) else item.name))
+            self.current_album = Album.get_one(name=(item.text()
+                                                     if not isinstance(item, APIConnect)
+                                                     else item.name))
         except APIFailException:
-            self.warning('Альбом не найден')
+            self.warn('Альбом не найден')
             return
         if not self.current_album:
             return
         try:
             songs = Track.get_all(album_name=self.current_album.name)
         except APIFailException:
-            self.warning('Песни не найдены')
+            self.warn('Песни не найдены')
             return
         self.songs_list.clear()
         self.songs_list.addItems([e.name for e in songs])
@@ -112,10 +123,12 @@ class App(QMainWindow):
 
     @log_action
     def show_song(self, item):
+        self.dewarn()
+        song = None
         try:
             song = Track.get_one(name=item.text(), artist_name=self.current_artist.name)
-        except APIFailException:
-            self.warning('Песня не найдена')
+        except APIFailException or not song:
+            self.warn('Песня не найдена')
             return
         self.change_song(song)
         self.song_slider.setMaximum(song.duration)
